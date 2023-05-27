@@ -1,3 +1,7 @@
+<%@page import="dao.DeptDao"%>
+<%@page import="vo.Dept"%>
+<%@page import="java.util.List"%>
+<%@page import="org.apache.catalina.ant.DeployTask"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <!doctype html>
 <html lang="ko">
@@ -60,12 +64,14 @@
    				<div class="form-group mb-2 w-75">
    					<label class="form-label">학과</label>
    					<select class="form-select" name="deptNo">
-   						<option value="101"> 컴퓨터공학과</option>
-   						<option value="101"> 컴퓨터공학과</option>
-   						<option value="101"> 컴퓨터공학과</option>
-   						<option value="101"> 컴퓨터공학과</option>
-   						<option value="101"> 컴퓨터공학과</option>
-   						<option value="101"> 컴퓨터공학과</option>
+   					<%
+   					List<Dept> depts = new DeptDao().getDepts();
+  					for (Dept dept : depts) {
+   					%>
+   						<option value="<%=dept.getNo() %>"><%=dept.getName() %></option>
+   					<%
+  					}
+   					%>
    					</select>
    				</div>
    				<div class="form-group mb-2 w-75">

@@ -11,7 +11,12 @@ public class Dept {
 		super();
 		this.no = no;
 	}
-	
+	public Dept(int no, String name) {
+		super();
+		this.no = no;
+		this.name = name;
+	}
+
 	public int getNo() {
 		return no;
 	}
