@@ -21,6 +21,22 @@
    	</div>
    	<div class="row mb-3">
    		<div class="col-12">
+   		<%
+   		String err = request.getParameter("err");
+   		if ("empty".equals(err)) {
+   		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>필수값 누락</strong> 모든 항목을 입력해주세요.
+			</div>
+   		<%
+   		} else if ("dup".equals(err)) {
+   		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>회원가입 실패</strong> 아이디가 이미 사용 중입니다.
+			</div>
+   		<%
+   		}
+   		%>
    			<p>사용자 정보를 입력하고 등록하세요.</p>
    			<form class="border bg-light p-3" method="post" action="insert.jsp">
    				<div class="form-group mb-2 w-75">
@@ -29,27 +45,27 @@
   						<label class="form-check-label" for="inlineRadio1">정교수</label>
 					</div>
 					<div class="form-check form-check-inline">
-  						<input class="form-check-input" type="radio" name="grade" value="부교수">
+  						<input class="form-check-input" type="radio" name="position" value="부교수">
   						<label class="form-check-label" for="inlineRadio2">부교수</label>
 					</div>
    					<div class="form-check form-check-inline">
-  						<input class="form-check-input" type="radio" name="grade"  value="조교수">
+  						<input class="form-check-input" type="radio" name="position"  value="조교수">
   						<label class="form-check-label" for="inlineRadio1">조교수</label>
 					</div>
 					<div class="form-check form-check-inline">
-  						<input class="form-check-input" type="radio" name="grade" value="강사">
+  						<input class="form-check-input" type="radio" name="position" value="강사">
   						<label class="form-check-label" for="inlineRadio2">강사</label>
 					</div>
    				</div>
    				<div class="form-group mb-2 w-75">
    					<label class="form-label">학과</label>
    					<select class="form-select" name="deptNo">
-   						<option value="100"> 컴퓨터공학과</option>
-   						<option value="100"> 컴퓨터공학과</option>
-   						<option value="100"> 컴퓨터공학과</option>
-   						<option value="100"> 컴퓨터공학과</option>
-   						<option value="100"> 컴퓨터공학과</option>
-   						<option value="100"> 컴퓨터공학과</option>
+   						<option value="101"> 컴퓨터공학과</option>
+   						<option value="101"> 컴퓨터공학과</option>
+   						<option value="101"> 컴퓨터공학과</option>
+   						<option value="101"> 컴퓨터공학과</option>
+   						<option value="101"> 컴퓨터공학과</option>
+   						<option value="101"> 컴퓨터공학과</option>
    					</select>
    				</div>
    				<div class="form-group mb-2 w-75">
@@ -58,14 +74,14 @@
    				</div>
    				<div class="form-group mb-2 w-75">
    					<label class="form-label">비밀번호</label>
-   					<input type="text" class="form-control" name="password" />
+   					<input type="password" class="form-control" name="password" />
    				</div>
    				<div class="form-group mb-2 w-75">
    					<label class="form-label">이름</label>
    					<input type="text" class="form-control" name="name" />
    				</div>
    				<div class="text-end w-75">
-   					<button type="submit" class="btn btn-primary">로그인</button>
+   					<button type="submit" class="btn btn-primary">등록</button>
    				</div>
    			</form>
    		</div>

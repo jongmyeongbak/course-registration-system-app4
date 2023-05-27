@@ -61,6 +61,9 @@ public class Professor {
 	public void setDept(Department dept) {
 		this.dept = dept;
 	}
+	public void setDept(int deptNo) {
+		this.dept = new Department(deptNo);
+	}
 
 	public int deptNo() {
 		return dept.getNo();
