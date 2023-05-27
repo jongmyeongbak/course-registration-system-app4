@@ -15,7 +15,7 @@ public class StudentDao {
 	
 	public Student getStudent(String id) {
 		return DaoHelper.selectOne("studentDao.getStudent", rs -> {
-			Student student = new Student(rs.getString("student_id"));
+			Student student = new Student(id);
 			student.setPassword(rs.getString("student_password"));
 			student.setName(rs.getString("student_name"));
 			student.setGrade(rs.getInt("student_grade"));
