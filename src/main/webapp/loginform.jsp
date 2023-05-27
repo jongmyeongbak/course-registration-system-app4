@@ -22,6 +22,22 @@
    	</div>
    	<div class="row mb-3">
    		<div class="col-12">
+   		<%
+   		String err = request.getParameter("err");
+   		if ("empty".equals(err)) {
+   		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>필수값 누락</strong> 모든 항목을 입력해주세요.
+			</div>
+   		<%
+   		} else if ("fail".equals(err)) {
+   		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>로그인 실패</strong> 아이디 혹은 비밀번호가 일치하지 않습니다. 입력한 내용을 확인해주세요.
+			</div>
+   		<%
+   		}
+   		%>
    			<p>아이디, 비밀번호를 입력하고 로그인하세요</p>
    			<form class="border bg-light p-3" method="post" action="login.jsp">
    				<div class="form-group mb-2 w-75">
