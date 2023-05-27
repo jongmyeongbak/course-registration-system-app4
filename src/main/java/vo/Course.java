@@ -13,7 +13,7 @@ public class Course {
 	private String description;
 	private Date updateDate;
 	private Date createDate;
-	private Department dept;
+	private Dept dept;
 	private Professor professor;
 	
 	public Course() {
@@ -77,10 +77,10 @@ public class Course {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	public Department getDept() {
+	public Dept getDept() {
 		return dept;
 	}
-	public void setDept(Department dept) {
+	public void setDept(Dept dept) {
 		this.dept = dept;
 	}
 	public Professor getProfessor() {

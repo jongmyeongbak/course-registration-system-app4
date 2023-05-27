@@ -1,13 +1,13 @@
 package vo;
 
-public class Department {
+public class Dept {
 
 	private int no;
 	private String name;
 	
-	public Department() {
+	public Dept() {
 	}
-	public Department(int no) {
+	public Dept(int no) {
 		super();
 		this.no = no;
 	}

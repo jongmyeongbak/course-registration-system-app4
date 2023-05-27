@@ -10,7 +10,7 @@ public class Professor {
 	private String position;
 	private Date updateDate;
 	private Date createDate;
-	private Department dept;
+	private Dept dept;
 	
 	public Professor() {
 	}
@@ -55,14 +55,14 @@ public class Professor {
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	public Department getDept() {
+	public Dept getDept() {
 		return dept;
 	}
-	public void setDept(Department dept) {
+	public void setDept(Dept dept) {
 		this.dept = dept;
 	}
 	public void setDept(int deptNo) {
-		this.dept = new Department(deptNo);
+		this.dept = new Dept(deptNo);
 	}
 
 	public int deptNo() {
