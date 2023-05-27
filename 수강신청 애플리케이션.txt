@@ -1,0 +1,194 @@
+수강신청 애플리케이션
+
+[webapp]
+	[professor]
+		course-detail.jsp				- 과정 상세 정보 조회(과정상세 정보 + 해당 과정을 신청한 학생 목록)
+		course-form.jsp				- 신규 과정 등록 폼 화면
+		course-insert.jsp				- 신규 과정 등록 처리
+		course-list.jsp				- 로그인한 강사가 개설한 과정 목록 조회
+		form.jsp					- 교수 신규 가입 화면
+		insert.jsp					- 교수 신규 가입 처리
+	[student]
+		course-cancel.jsp				- 수강취소 처리
+		course-detail.jsp				- 과정 상세 정보 조회
+		course-list.jsp				- 개설된 전체 과정 목록 조회
+		course-reapply.jsp			- 수강취소한 과정에 대한 재수강 처리
+		course-registration-list.jsp		- 로그인한 학생이 수강신청한 과정 목록 조회
+		course-request.jsp			- 수강 신청 처리
+		form.jsp					- 학생 신규 가입 화면
+		insert.jsp					- 학생 신규 가입 처리
+	home.jsp				- 홈 화면
+	login.jsp				- 로그인 처리 화면
+	loginform.jsp			- 로그인 폼 화면
+	logout.jsp				- 로그아웃 처리 화면
+	nav.jsp				- 내비게이션 바
+	
+
+로그인하기
+	+ loginform.jsp와 login.jsp
+	+ loginform.jsp에서 로그인 버튼을 클릭하면 login.jsp로 type, id, password가 제출된다.
+	+ login.jsp에서는 type, id, password를 조회한다.
+	+ type가 STUDENTS인 경우와 PROFESSOR인 경우로 나누어서 코딩한다.
+	+ type가 "STUDENTS"인 경우
+		+ id로 학생정보를 조회한다.
+		+ 학생정보가 존재하지 않으면 "loginform.jsp?err=fail"을 재요청 URL로 보낸다.
+		+ 비밀번호가 일치하지 않으면 "loginform.jsp?err=fail"을 재요청 URL로 보낸다.
+		+ 학생정보가 존재하고, 비밀번호가 일치하면 세션객체에 session.setAttribute("loginId", student.getId()); session.setAttribute("loginType", "STUDENT")를 저장한다.
+	+ type가 "PRORESSOR"인 경우
+		+ id로 교수정보를 조회한다.
+		+ 교수정보가 존재하지 않으면 "loginform.jsp?err=fail"을 재요청 URL로 보낸다.
+		+ 비밀번호가 일치하지 않으면 "loginform.jsp?err=fail"을 재요청 URL로 보낸다.
+		+ 교수정보가 존재하고, 비밀번호가 일치하면 세션객체에 session.setAttribute("loginId", professor.getId()); session.setAttribute("loginType", "PROFESSOR")를 저장한다.
+	+ "home.jsp"를 재요청 URL로 보낸다.
+
+로그아웃하기
+	+ logout.jsp
+	+ 세션객체를 무효화시킨다.
+	+ "home.jsp"를 재요청 URL로 보낸다.
+
+학생 관련
+	신규 학생 가입하기
+		+ student/form.jsp와 student/insert.jsp
+		+ student/form.jsp에서는 학과정보를 조회해서 폼의 학과정보를 출력한다.
+		+ student/form.jsp에서 student/insert.jsp로 폼 입력값(grade, id, password, name)을 제출한다.
+		+ student/insert.jsp에서 신규 학생정보를 가입처리한다.(id 중복체크를 수행하고, id가 이미 존재하면 form.jsp?err=dup를 재요청 URL로 보낸다.)
+			+ student/form.jsp에서는 err=dup에 대한 경고 메세지(회원가입 실패, 아이디가 이미 사용중입니다.)가 출력되도록 한다.
+		+ 신규 학생정보는 web_school_students 테이블에 저장시킨다.
+		+ student/insert.jsp에서 회원가입처리가 완료되면 ../home.jsp를 재요청 url 응답으로 보낸다.
+
+	개설 과정 목록 조회하기
+		+ student/course-list.jsp
+		+ 개설과정 목록을 조회해서 화면에 출력한다. 
+		+ 과정명을 클릭하면 개설과정 상세정보 페이지를 요청한다. <a href="detail.jsp?cno=과정번호">과정명</a>
+		+ 페이징 처리를 구현하는 경우
+			- 페이지번호 조회
+			- 전체 과정 총 갯수 조회
+			- Pagination객체 생성
+			- 조회범위 조회(begin, end), 조회범위에 해당하는 과정목록 조회해서 출력하기
+			- 페이지 표시 범위조회(beginPage, endPage), 페이지내비게이션 출력하기
+
+	개설 과정 상세정보 조회하기
+		+ student/course-info.jsp
+		+ 요청 파라미터에서 과정번호(cno)를 조회한다.
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다.)
+		+ 과정번호에 해당하는 과정 상세정보를 조회한다.
+		+ web_school_courses와 web_school_professors를 조인해서 담당교수명도 함께 조회한다.
+		+ 과정 상세정보를 출력한다.
+		+ 모집인원보다 신청자수가 적고 loginId가 null아니고, loginType이 "STUDENT"와 일치하면 [수강신청]버튼을 출력한다.
+		+ 수강신청버튼을 클릭하면 수강신청을 요청한다. <a href="course-request.jsp?cno=과정번호">수강신청</a>
+
+	수강신청하기
+		+ student/request.jsp
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다)
+		+ loginId가 null이면 "../loginform.jsp?err=req&job=수강신청"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ loginType이 "STUDENT"가 아니면 "../home..jsp?err=deny&job=수강신청"를 재요청 URL로 보낸다.
+			+ home.jsp에서는 err=deny&job=xxx에 대한 경고메세지(xxx에 대한 요청은 거부되었습니다.)가 출력되도록 한다.
+		+ loginId가 존재하고 loginType이 "STUDENT" 인 경우 수강신청을 등록처리한다.
+		+ 수강신청 등록정보는 web_school_registrations 테이블에 저장시킨다.(과정번호, 학생아이디를 저장시킨다.)
+		+ 해당 개설과정의 신청자수를 1증가 시킨다.(과정번호에 해당하는 과정정보를 조회하고, 신청자수를 증가시킨다음 테이블에 반영시킨다.)
+		+ 수강신청 등록이 완료되면 "course-list.jsp"를 재요청 URL로 보낸다.
+
+	수강신청 현황 목록 보기
+		+ student/course-registraion-list.jsp
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다)
+		+ loginId가 null이면 "../loginform.jsp?err=req&job=수강신청현황"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ loginType이 "STUDENT"가 아니면 "../home..jsp?err=deny&job=수강신청현황"를 재요청 URL로 보낸다.
+			+ home.jsp에서는 err=deny&job=xxx에 대한 경고메세지(xxx에 대한 요청은 거부되었습니다.)가 출력되도록 한다.
+		+ 로그인된 사용자의 아이디로 수강신청 목록을 조회해서 화면에 출력한다.
+		+ 수강신청 목록이 비어있으면 테이블에 "수강신청 현황이 존재하지 않습니다."라고 표시한다.
+		+ web_school_registrations와  web_school_courses와 web_school_professors를 조인해서 과정정보 담당교수 정보도 같이 조회한다.
+		+ 수강신청 상태가 "신청완료"인 경우 수강취소 버튼을 출력시키고, 수강신청 상태가 "수강취소"인 경우 재수강 버튼을 출력시킨다.
+		+ 수강취소링크는 <a href="course-cancel.jsp?rno=수강신청등록번호">수강취소</a>다.
+		+ 재수강링크는 <a href="course-reapply.jsp?rno=수강신청등록번호">재수강</a>다.
+	
+	수강취소하기
+		+ student/course-cancel.jsp
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다)
+		+ loginId가 null이면 "../loginform.jsp?err=req&job=수강취소"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ loginType이 "STUDENT"가 아니면 "../home..jsp?err=deny&job=수강취소"를 재요청 URL로 보낸다.
+			+ home.jsp에서는 err=deny&job=xxx에 대한 경고메세지(xxx에 대한 요청은 거부되었습니다.)가 출력되도록 한다.
+		+ 요청 파라미터에서 수강신청등록번호(rno)를 조회한다.
+		+ 수강신청등록번호에 해당하는 수강신청등록정보를 조회한다.(web_school_registrations테이블에서만 조회한다. 조인 필요없음)
+		+ 수강신청등록정보의 학생아이디와 로그인한 사용자 아이디가 일치하지 않으면 "course-registration-list.jsp?err=deny"을 재요청 URL로 보낸다.
+			+ student/course-registration-list.jsp에서는 ere=deny에 대한 경고메세지(타인의 수강신청정보는 변경할 수 없습니다.)가 출력되도록 한다.
+		+ 수강신청등록정보의 신청상태를 "수강취소"로 변경하고 테이블에 반영시킨다.
+		+ 수강신청등록정보에서 과정번호를 조회하고, 과정번호에 해당하는 과정정보를 조회한다.
+		+ 과정정보의 신청자수를 1감소 시키고, 테이블에 반영시킨다.
+		+ 수강취소가 완료되면 "course-registration-list.jsp"를 재요청 URL로 보낸다.
+
+	재수강하기
+		+ student/course-reapply.jsp
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다)
+		+ loginId가 null이면 "../loginform.jsp?err=req&job=재수강"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ loginType이 "STUDENT"가 아니면 "../home..jsp?err=deny&job=수강취소"를 재요청 URL로 보낸다.
+			+ home.jsp에서는 err=deny&job=xxx에 대한 경고메세지(xxx에 대한 요청은 거부되었습니다.)가 출력되도록 한다.
+		+ 요청 파라미터에서 수강신청등록번호(rno)를 조회한다.
+		+ 수강신청등록번호에 해당하는 수강신청등록정보를 조회한다.(web_school_registrations테이블에서만 조회한다. 조인 필요없음)
+		+ 수강신청등록정보의 학생아이디와 로그인한 사용자 아이디가 일치하지 않으면 "course-registration-list.jsp?err=deny"을 재요청 URL로 보낸다.
+			+ student/course-registration-list.jsp에서는 ere=deny에 대한 경고메세지(타인의 수강신청정보는 변경할 수 없습니다.)가 출력되도록 한다.
+		+ 수강신청등록정보의 신청상태를 "수강완료"로 변경하고 테이블에 반영시킨다.
+		+ 수강신청등록정보에서 과정번호를 조회하고, 과정번호에 해당하는 과정정보를 조회한다.
+		+ 과정정보의 신청자수를 1증가 시키고, 테이블에 반영시킨다.
+		+ 수강취소가 완료되면 "course-registration-list.jsp"를 재요청 URL로 보낸다.
+
+교수 관련
+	신규 교슈 가입하기
+		+ professor/form.jsp와 professor/insert.jsp
+		+ professor/form.jsp에서는 학과정보를 조회해서 폼의 학과정보를 출력한다.
+		+ professor/form.jsp에서 professor/insert.jsp로 폼 입력값(position, id, password, name)을 제출한다.
+		+ professor/insert.jsp에서 신규 교수정보를 가입처리한다.(id 중복체크를 수행하고, id가 이미 존재하면 form.jsp?err=dup를 재요청 URL로 보낸다.)
+		+ 신규 교수정보는 web_school_professor 테이블에 저장시킨다.
+		+ professor/insert.jsp에서 회원가입처리가 완료되면 ../home.jsp를 재요청 url 응답으로 보낸다.
+		+ professor/form.jsp에서 아이디 중복체크 오류를 출력시킨다.(요청 파라미터값(err)를 조회한다. err값이 dup인 경우 경고내용을 출력시킨다.)
+
+	교수 자신이 개설한 목록 조회하기
+		+ professor/course-list.jsp
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다.)
+		+ loginId가 null이면 "../loginform.jsp?err=req&job=개설과정조회"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ 로그인된 사용자의 아이디로 교수자신이 개설한 과정 목록을 조회해서 화면에 출력한다.
+		+ 과정 목록이 비어있으면 테이블에 "개설한 과정이 존재하지 않습니다."라고 표시한다.
+		+ 상세보기 버튼을 클릭하면 <a href="course-detail.jsp?cno=과정번호">과정명</a> 링크를 요청한다.
+		+ 페이징 처리를 구현하는 경우
+			- 페이지번호 조회
+			- 자신이 개설한 과정 총 갯수 조회
+			- Pagination객체 생성
+			- 조회범위 조회(begin, end), 조회범위에 해당하는 개설과정 조회해서 출력하기
+			- 페이지 표시 범위조회(beginPage, endPage), 페이지내비게이션 출력하기
+
+	개설과정 현황 조회하기
+		+ professor/course-detail.jsp
+		+ 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다.)
+		+ loginId가 null이면 "../loginform.jsp?err=req&job=과정등록"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ loginType가 "PROFESSOR"이 아니면 "../home.jsp?err=deny&job=과정등록"을 재요청 URL로 보낸다.
+			+ home.jsp에서는 err=deny&job=xxx에 대한 경고메세지(xxx에 대한 요청은 거부되었습니다. )가 출력되도록한다.
+		+ 요청 파라미터에서 과정번호(cno)를 조회한다.
+		+ 과정번호에 해당하는 과정 상세정보를 조회한다.(web_school_courses, web_school_depts, web_school_professors 조인)
+		+ 조회된 과정정보를 출력한다.
+		+ 수강신청등록테이블에서 이 과정을 수강한 학생목록을 조회한다.(web_school_registrations와 web_schools_student, web_school_depts 조인)
+		+ 조회된 학생목록 정보를 출력한다.
+		+ 학생목록정보가 비어있으면 "수강 신청 정보가 존재하지 않습니다"를 출력한다.
+
+	
+	신규 과정 등록하기
+		+ professor/course-form.jsp와 professor/course-insert.jsp
+		+ professor/course-form.jsp에서는 학과정보를 조회해서 출력시킨다.
+		+ professor/course-form.jsp는 professor/course-insert.jsp로 폼입력값(name, type, deptNo, score, quota, description)을 제출한다.
+
+		+ professor/course-insert.jsp에서는 세션에서 로그인된 사용자 정보를 조회한다.(loginId, loginType를 조회한다.)
+		+ professor/course-insert.jsp에서 loginId가 null이면 "../loginform.jsp?err=req&job=과정등록"을 재요청 URL로 보낸다.
+			+ loginform.jsp에서는 err=req에 대한 경고메세지(로그인 필요, xxx 서비스는 로그인 후 이용가능합니다.)가 출력되도록 한다.
+		+ professor/course-insert.jsp에서loginType가 "PROFESSOR"이 아니면 "../home.jsp?err=deny&job=과정등록"을 재요청 URL로 보낸다.
+			+ home.jsp에서는 err=deny&job=xxx에 대한 경고메세지(xxx에 대한 요청은 거부되었습니다. )가 출력되도록한다.
+		+ professor/course-insert.jsp에서 요청파라미터로 전달된 폼 입력값을 조회한다.
+		+ professor/course-insert.jsp에서 신규 개설과정 정보를 테이블에 저장한다.
+		+ professor/course-insert.jsp에서 신규 개설과정 등록이 완료되면 "course-list.jsp"를 재요청 URL로 보낸다.
+	
+
+	
+		
