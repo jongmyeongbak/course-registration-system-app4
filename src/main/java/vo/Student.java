@@ -14,7 +14,11 @@ public class Student {
 	
 	public Student() {
 	}
-	
+	public Student(String id) {
+		super();
+		this.id = id;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -56,6 +60,9 @@ public class Student {
 	}
 	public void setDept(Department dept) {
 		this.dept = dept;
+	}
+	public void setDept(int deptNo) {
+		this.dept = new Department(deptNo);
 	}
 	
 	public int deptNo() {
