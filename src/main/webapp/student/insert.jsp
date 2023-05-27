@@ -1,4 +1,3 @@
-<%@page import="vo.Department"%>
 <%@page import="vo.Student"%>
 <%@page import="dao.StudentDao"%>
 <%@page import="util.StringUtils"%>
