@@ -17,6 +17,17 @@
 <div class="container">
 	<div class="bg-light p-3">
 		<h1 class="mb-5">수강신청 시스템</h1>
+   		<%
+   		String err = request.getParameter("err");
+   		if ("deny".equals(err)) {
+   			String job = request.getParameter("job");
+   		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong><%=job %></strong> 요청은 거부되었습니다.
+			</div>
+   		<%
+   		}
+   		%>
 		<p class="mb-1">학생, 교수로 사용자를 등록할 수 있습니다.</p>
 		<p class="mb-1">학생은 과정조회/수강신청/수강신청현황조회/수강취소 서비스를 제공받습니다.</p>
 		<p class="mb-1">교수는 과정조회/과정등록/과정현황조회 서비스를 제공받습니다.</p>
