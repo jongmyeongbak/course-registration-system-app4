@@ -15,7 +15,7 @@
 	}
 	
 	StudentDao studentDao = new StudentDao();
-	if (id.equals(studentDao.getStudent(id).getId())) {
+	if (studentDao.getStudent(id) != null) {
 		response.sendRedirect("form.jsp?err=dup");
 		return;
 	}
