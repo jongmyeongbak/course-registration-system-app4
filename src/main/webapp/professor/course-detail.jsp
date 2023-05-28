@@ -50,7 +50,7 @@
 					</tr>
 					<tr>
 						<th class="table-dark" style="width: 15%;">설명</th>
-						<td style="width: 85%; height: 100px;" colspan="3">소트트웨어 개론입니다.</td>
+						<td style="width: 85%; height: 100px; white-space: break-spaces;" colspan="3">소트트웨어 개론입니다.</td>
 					</tr>
 				</tbody>
 			</table>

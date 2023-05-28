@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%
 String menu = request.getParameter("menu");
-String loginId = request.getParameter("loginId");
+String loginId = (String) session.getAttribute("loginId");
 %>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark mb-3">
 	<div class="container">

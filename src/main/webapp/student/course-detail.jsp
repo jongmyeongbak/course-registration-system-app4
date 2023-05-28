@@ -74,7 +74,7 @@ if (course == null) {
 		<%
 		if (loginId != null && "STUDENT".equals(loginType)) {
 		%>
-			<a href="course-request.jsp?cno=100" class="btn btn-success btn-sm">수강신청</a>
+			<a href="course-request.jsp?cno=<%=cno %>" class="btn btn-success btn-sm">수강신청</a>
 		<%
 		}
 		%>

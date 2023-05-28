@@ -67,4 +67,19 @@ public class CourseDao {
 			return course;
 		}, no);
 	}
+	
+	public Course getCourseReqCnt(int courseNo) {
+		return DaoHelper.selectOne("courseDao.getCourseReqCnt", rs -> {
+			Course course = new Course();
+			course.setQuota(rs.getInt("course_quota"));
+			course.setReqCnt(rs.getInt("course_req_cnt"));
+			return course;
+		}, courseNo);
+	}
+	public void increaseCourseReqCnt(int courseNo) {
+		DaoHelper.update("courseDao.increaseCourseReqCnt", courseNo);
+	}
+	public void decreaseCourseReqCnt(int courseNo) {
+		DaoHelper.update("courseDao.decreaseCourseReqCnt", courseNo);
+	}
 }
