@@ -18,7 +18,12 @@ public class Professor {
 		super();
 		this.id = id;
 	}
-
+	public Professor(String id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+	
 	public String getId() {
 		return id;
 	}
