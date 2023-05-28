@@ -29,6 +29,15 @@ public class RegistrationDao {
 		}, studentId);
 	}
 	
+	public Registration getRegistrationByNoAndStudentId(int no, String studentId) {
+		return DaoHelper.selectOne("getRegistrationByNoAndStudentId", rs -> {
+			Registration registration = new Registration();
+			registration.setCourse(new Course(rs.getInt("reg_no")));
+			registration.setStatus(rs.getString("reg_status"));
+			return registration;
+		}, no, studentId);
+	}
+	
 	public Registration getRegistrationByCourseNoAndStudentId(int no, String studentId) {
 		return DaoHelper.selectOne("registrationDao.getRegistrationByCourseNoAndStudentId", rs -> {
 			Registration registration = new Registration();
@@ -42,6 +51,7 @@ public class RegistrationDao {
 			return rs.getInt("cnt");
 		}, no, studentId);
 	}
+	
 	public void updateRegistrationStatus(String status, int no) {
 		DaoHelper.update("registrationDao.updateRegistrationStatus", status, no);
 	}

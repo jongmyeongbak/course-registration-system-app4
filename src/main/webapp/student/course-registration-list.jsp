@@ -49,6 +49,12 @@ if (!"STUDENT".equals(loginType)) {
 				<strong>정원 초과</strong> 수강인원이 초과되었습니다.
 			</div>
 		<%
+		} else if ("deny".equals(err)) {
+		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>요청 거절</strong> 타인의 수강신청정보는 변경할 수 없습니다.
+			</div>
+		<%
 		}
 		%>
 			<p>현재 수강신청 현황을 확인하세요</p>
