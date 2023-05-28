@@ -94,11 +94,11 @@ if (!"STUDENT".equals(loginType)) {
 						<%
 						if ("신청완료".equals(status)) {
 						%>
-						<span class="badge text-bg-secondary">수강취소</span>
+						<span class="badge text-bg-success">신청완료</span>
 						<%
 						} else {
 						%>
-						<span class="badge text-bg-success">신청완료</span>
+						<span class="badge text-bg-secondary">신청취소</span>
 						<%
 						}
 						%>
@@ -108,7 +108,7 @@ if (!"STUDENT".equals(loginType)) {
 							<%
 							if ("신청완료".equals(status)) {
 							%>
-							<a href="course-cancel.jsp?regNo=<%=reg.getNo() %>" class="btn btn-outline-danger btn-xs">수강취소</a>
+							<a href="course-cancel.jsp?regNo=<%=reg.getNo() %>" class="btn btn-outline-danger btn-xs">신청취소</a>
 							<%
 							} else {
 							%>

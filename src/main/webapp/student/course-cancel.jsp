@@ -29,8 +29,8 @@
 		return;
 	}
 	
-	if ("수강완료".equals(registration.getStatus())) {
-		registrationDao.updateRegistrationStatus("수강취소", regNo);
+	if ("신청완료".equals(registration.getStatus())) {
+		registrationDao.updateRegistrationStatus("신청취소", regNo);
 		new CourseDao().decreaseCourseReqCnt(registration.courseNo());
 	}
 	response.sendRedirect("course-registration-list.jsp");
