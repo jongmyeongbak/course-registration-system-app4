@@ -54,16 +54,15 @@ List<Course> courseList = courseDao.getCourses(pagination.getFirstRow(), paginat
 				<tbody>
 				<%
 				for (Course course : courseList) {
-					Dept dept = course.getDept();
 				%>
 					<tr class="align-middle">
 						<td><%=course.getNo() %></td>
 						<td><%=course.getName() %></td>
-						<td><%=dept.getName() %></td>
+						<td><%=course.getDept().getName() %></td>
 						<td><%=course.getProfessor().getName() %></td>
 						<td><%=course.getQuota() %></td>
 						<td><%=course.getReqCnt() %></td>
-						<td><a href="course-detail.jsp?no=<%=dept.getNo() %>" class="btn btn-outline-dark btn-xs">상세정보</a></td>
+						<td><a href="course-detail.jsp?cno=<%=course.getNo() %>" class="btn btn-outline-dark btn-xs">상세정보</a></td>
 					</tr>
 				<%
 				}
