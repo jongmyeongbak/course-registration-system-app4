@@ -52,4 +52,19 @@ public class CourseDao {
 			return course;
 		}, professorId, first, last);
 	}
+	
+	public Course getCourseByNo(int no) {
+		return DaoHelper.selectOne("courseDao.getCourseByNo", rs -> {
+			Course course = new Course();
+			course.setName(rs.getString("course_name"));
+			course.setType(rs.getString("course_type"));
+			course.setScore(rs.getInt("course_score"));
+			course.setQuota(rs.getInt("course_quota"));
+			course.setReqCnt(rs.getInt("course_req_cnt"));
+			course.setDescription(rs.getString("course_description"));
+			course.setDept(new Dept(0, rs.getString("dept_name")));
+			course.setProfessor(new Professor(null, rs.getString("professor_name")));
+			return course;
+		}, no);
+	}
 }
