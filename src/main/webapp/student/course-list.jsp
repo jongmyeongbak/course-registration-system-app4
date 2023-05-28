@@ -1,4 +1,3 @@
-<%@page import="vo.Dept"%>
 <%@page import="vo.Course"%>
 <%@page import="java.util.List"%>
 <%@page import="info.Pagination"%>
