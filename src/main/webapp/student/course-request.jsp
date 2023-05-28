@@ -6,7 +6,7 @@
 <%@page import="java.net.URLEncoder"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%
-// 과정 신청을 처리한다.
+	// 과정 신청을 처리한다.
 	String loginId = (String) session.getAttribute("loginId");
 	if (loginId == null) {
 		response.sendRedirect("../loginform.jsp?err=req&job=" + URLEncoder.encode("수강신청", "utf-8"));

@@ -22,6 +22,13 @@ public class Course {
 		super();
 		this.no = no;
 	}
+	public Course(int no, String name, Dept dept, Professor professor) {
+		super();
+		this.no = no;
+		this.name = name;
+		this.dept = dept;
+		this.professor = professor;
+	}
 
 	public int getNo() {
 		return no;

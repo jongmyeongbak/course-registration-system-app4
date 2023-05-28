@@ -6,7 +6,7 @@ public class Registration {
 
 	private int no;
 	private Course course;
-	private String id;
+	private Student student;
 	private String status;
 	private Date updateDate;
 	private Date createDate;
@@ -26,11 +26,11 @@ public class Registration {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-	public String getId() {
-		return id;
+	public Student getStudent() {
+		return student;
 	}
-	public void setId(String id) {
-		this.id = id;
+	public void setStudent(Student student) {
+		this.student = student;
 	}
 	public String getStatus() {
 		return status;
