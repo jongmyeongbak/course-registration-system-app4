@@ -32,7 +32,7 @@ public class RegistrationDao {
 	public Registration getRegistrationByNoAndStudentId(int no, String studentId) {
 		return DaoHelper.selectOne("getRegistrationByNoAndStudentId", rs -> {
 			Registration registration = new Registration();
-			registration.setCourse(new Course(rs.getInt("reg_no")));
+			registration.setCourse(new Course(rs.getInt("course_no")));
 			registration.setStatus(rs.getString("reg_status"));
 			return registration;
 		}, no, studentId);
