@@ -7,6 +7,7 @@ import vo.Course;
 import vo.Dept;
 import vo.Professor;
 import vo.Registration;
+import vo.Student;
 
 public class RegistrationDao {
 
@@ -36,6 +37,16 @@ public class RegistrationDao {
 			registration.setStatus(rs.getString("reg_status"));
 			return registration;
 		}, no, studentId);
+	}
+	
+	public List<Student> getStudentsByCourseNoAndStatus(int courseNo, String status) {
+		return DaoHelper.selectList("registrationDao.getStudentsByCourseNoAndStatus", rs -> {
+			Student student = new Student(rs.getString("student_id"));
+			student.setName(rs.getString("student_name"));
+			student.setGrade(rs.getInt("student_grade"));
+			student.setDept(new Dept(0, rs.getString("dept_name")));
+			return student;
+		}, courseNo, status);
 	}
 	
 	public Registration getRegistrationByCourseNoAndStudentId(int no, String studentId) {
