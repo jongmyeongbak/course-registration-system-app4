@@ -60,7 +60,7 @@ List<Course> courseList = courseDao.getCoursesByProfessorId(loginId, pagination.
 				<%
 				if (courseList.isEmpty()) {
 				%>
-					<tr class="align-middle"><td colspan="7">개설한 과정이 존재하지 않습니다.<td></tr>
+					<tr class="align-middle text-center"><td colspan="7">개설한 과정이 존재하지 않습니다.<td></tr>
 				<%
 				} else {
 					for (Course course : courseList) {

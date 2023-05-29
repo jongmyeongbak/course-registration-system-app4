@@ -75,9 +75,7 @@ if (!"STUDENT".equals(loginType)) {
 				List<Registration> registrations = new RegistrationDao().getRegistrationsByStudentId(loginId);
 				if (registrations.isEmpty()) {
 				%>
-					<tr class="align-middle">
-						<td>수강신청 현황이 존재하지 않습니다.</td>
-					</tr>
+					<tr class="align-middle text-center"><td colspan="7">수강신청 현황이 존재하지 않습니다.</td></tr>
 				<%
 				} else {
 					for (Registration reg : registrations) {
