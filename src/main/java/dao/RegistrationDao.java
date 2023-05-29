@@ -11,8 +11,8 @@ import vo.Student;
 
 public class RegistrationDao {
 
-	public void insertRegistrationByCourseNoAndStudentId(int no, String studentId) {
-		DaoHelper.update("registrationDao.insertRegistrationByCourseNoAndStudentId", no, studentId);
+	public void insertRegistrationByCourseNoAndStudentId(int courseNo, String studentId) {
+		DaoHelper.update("registrationDao.insertRegistrationByCourseNoAndStudentId", courseNo, studentId);
 	}
 	
 	public List<Registration> getRegistrationsByStudentId(String studentId) {
@@ -30,15 +30,6 @@ public class RegistrationDao {
 		}, studentId);
 	}
 	
-	public Registration getRegistrationByNoAndStudentId(int no, String studentId) {
-		return DaoHelper.selectOne("getRegistrationByNoAndStudentId", rs -> {
-			Registration registration = new Registration();
-			registration.setCourse(new Course(rs.getInt("course_no")));
-			registration.setStatus(rs.getString("reg_status"));
-			return registration;
-		}, no, studentId);
-	}
-	
 	public List<Student> getStudentsByCourseNoAndStatus(int courseNo, String status) {
 		return DaoHelper.selectList("registrationDao.getStudentsByCourseNoAndStatus", rs -> {
 			Student student = new Student(rs.getString("student_id"));
@@ -49,24 +40,33 @@ public class RegistrationDao {
 		}, courseNo, status);
 	}
 	
-	public Registration getRegistrationByCourseNoAndStudentId(int no, String studentId) {
+	public Registration getRegistrationByNoAndStudentId(int no, String studentId) {
+		return DaoHelper.selectOne("getRegistrationByNoAndStudentId", rs -> {
+			Registration registration = new Registration();
+			registration.setCourse(new Course(rs.getInt("course_no")));
+			registration.setStatus(rs.getString("reg_status"));
+			return registration;
+		}, no, studentId);
+	}
+	
+	public Registration getRegistrationByCourseNoAndStudentId(int courseNo, String studentId) {
 		return DaoHelper.selectOne("registrationDao.getRegistrationByCourseNoAndStudentId", rs -> {
 			Registration registration = new Registration();
 			registration.setNo(rs.getInt("reg_no"));
 			registration.setStatus(rs.getString("reg_status"));
 			return registration;
-		}, no, studentId);
+		}, courseNo, studentId);
 	}
-	public int countRegistrationsByCourseNoAndStudentId(int no, String studentId) {
+	public int countRegistrationsByCourseNoAndStudentId(int courseNo, String studentId) {
 		return DaoHelper.selectOne("registrationDao.countRegistrationsByCourseNoAndStudentId", rs -> {
 			return rs.getInt("cnt");
-		}, no, studentId);
+		}, courseNo, studentId);
 	}
 	
 	public void updateRegistrationStatus(String status, int no) {
 		DaoHelper.update("registrationDao.updateRegistrationStatus", status, no);
 	}
-	public void deleteOneRegistrationByCourseNoAndStudentId(int no, String studentId) {
-		DaoHelper.update("registrationDao.deleteOneRegistrationByCourseNoAndStudentId", no, studentId);
+	public void deleteOneRegistrationByCourseNoAndStudentId(int courseNo, String studentId) {
+		DaoHelper.update("registrationDao.deleteOneRegistrationByCourseNoAndStudentId", courseNo, studentId);
 	}
 }
