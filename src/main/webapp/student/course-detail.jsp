@@ -4,7 +4,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <%
 int cno = StringUtils.stringToInt(request.getParameter("cno"));
-String loginId = (String) session.getAttribute("loginId");
 String loginType = (String) session.getAttribute("loginType");
 
 Course course = CourseDao.getInstance().getCourseByNo(cno);
@@ -72,7 +71,7 @@ if (course == null) {
 	<div class="row mb-3">
 		<div class="col-12 text-end">
 		<%
-		if (loginId != null && "STUDENT".equals(loginType)) {
+		if ("STUDENT".equals(loginType)) {
 		%>
 			<a href="course-request.jsp?cno=<%=cno %>" class="btn btn-success btn-sm">수강신청</a>
 		<%
