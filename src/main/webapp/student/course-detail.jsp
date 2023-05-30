@@ -1,4 +1,16 @@
+<%@page import="dao.CourseDao"%>
+<%@page import="vo.Course"%>
+<%@page import="util.StringUtils"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%
+int cno = StringUtils.stringToInt(request.getParameter("cno"));
+String loginType = (String) session.getAttribute("loginType");
+
+Course course = CourseDao.getInstance().getCourseByNo(cno);
+if (course == null) {
+	return;
+}
+%>
 <!doctype html>
 <html lang="ko">
 <head>
@@ -26,31 +38,31 @@
 				<tbody>
 					<tr>
 						<th class="table-dark" style="width: 15%;">과정이름</th>
-						<td style="width: 35%;">소프트웨어 개론</td>
+						<td style="width: 35%;"><%=course.getName() %></td>
 						<th class="table-dark" style="width: 15%;">번호</th>
-						<td style="width: 35%;">1000</td>
+						<td style="width: 35%;"><%=cno %></td>
 					</tr>
 					<tr>
 						<th class="table-dark" style="width: 15%;">구분</th>
-						<td style="width: 35%;">교양</td>
+						<td style="width: 35%;"><%=course.getType() %></td>
 						<th class="table-dark" style="width: 15%;">학점</th>
-						<td style="width: 35%;">3학점</td>
+						<td style="width: 35%;"><%=course.getScore() %>학점</td>
 					</tr>
 					<tr>
 						<th class="table-dark" style="width: 15%;">학과</th>
-						<td style="width: 35%;">컴퓨터공학과</td>
+						<td style="width: 35%;"><%=course.getDept().getName() %></td>
 						<th class="table-dark" style="width: 15%;">담당교수</th>
-						<td style="width: 35%;">홍길동</td>
+						<td style="width: 35%;"><%=course.getProfessor().getName() %></td>
 					</tr>
 					<tr>
 						<th class="table-dark" style="width: 15%;">모집정원</th>
-						<td style="width: 35%;">30</td>
+						<td style="width: 35%;"><%=course.getQuota() %></td>
 						<th class="table-dark" style="width: 15%;">신청자수</th>
-						<td style="width: 35%;">5</td>
+						<td style="width: 35%;"><%=course.getReqCnt() %></td>
 					</tr>
 					<tr>
 						<th class="table-dark" style="width: 15%;">설명</th>
-						<td style="width: 85%; height: 100px;" colspan="3">소트트웨어 개론입니다.</td>
+						<td style="width: 85%; height: 100px; white-space: break-spaces;" colspan="3"><%=course.getDescription() %></td>
 					</tr>
 				</tbody>
 			</table>
@@ -58,8 +70,14 @@
 	</div>
 	<div class="row mb-3">
 		<div class="col-12 text-end">
-			<a href="course-request.jsp?no=100" class="btn btn-success btn-sm">수강신청</a>
-			<a href="course-list.jsp" class="btn btn-secondary btn-sm">목록보기</a>
+		<%
+		if ("STUDENT".equals(loginType)) {
+		%>
+			<a href="course-request.jsp?cno=<%=cno %>" class="btn btn-success<%=course.getReqCnt() < course.getQuota() ? "" : " disabled"%>">수강신청</a>
+		<%
+		}
+		%>
+			<a href="course-list.jsp" class="btn btn-secondary">목록보기</a>
 		</div>
 	</div>
 </div>

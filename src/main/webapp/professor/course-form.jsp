@@ -1,3 +1,7 @@
+<%@page import="dao.ProfessorDao"%>
+<%@page import="dao.DeptDao"%>
+<%@page import="vo.Dept"%>
+<%@page import="java.util.List"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 <!doctype html>
 <html lang="ko">
@@ -26,13 +30,13 @@
 				<form class="row g-3" method="post" action="course-insert.jsp">
 	 				<div class="col-md-12">
 						<label class="form-label">과정명</label>
-						<input type="text" class="form-control" id="name">
+						<input type="text" class="form-control" name="name">
 					</div>
 	 				<div class="col-md-6">
 						<label class="form-label">구분</label>
 						<div>
 							<div class="form-check form-check-inline">
-		  						<input class="form-check-input" type="radio" name="type"  value="전공" checked="checked">
+		  						<input class="form-check-input" type="radio" name="type" value="전공" checked="checked">
 		  						<label class="form-check-label" >전공</label>
 							</div>
 							<div class="form-check form-check-inline">
@@ -44,19 +48,28 @@
 					<div class="col-md-6">
 						<label class="form-label">학과</label>
 						<select class="form-select" name="deptNo">
-	   						<option value="100"> 컴퓨터공학과</option>
-	   						<option value="100"> 컴퓨터공학과</option>
-	   						<option value="100"> 컴퓨터공학과</option>
-	   						<option value="100"> 컴퓨터공학과</option>
-	   						<option value="100"> 컴퓨터공학과</option>
-	   						<option value="100"> 컴퓨터공학과</option>
+	   					<%
+	   					String loginType = (String) session.getAttribute("loginType");
+	   					int myDeptNo = 0;
+	   					if ("PROFESSOR".equals(loginType)) {
+	   						String loginId = (String) session.getAttribute("loginId");
+	   						myDeptNo = ProfessorDao.getInstance().getProfessor(loginId).deptNo();
+	   					}
+	   					
+	   					List<Dept> depts = DeptDao.getInstance().getDepts();
+	  					for (Dept dept : depts) {
+	   					%>
+	   						<option value="<%=dept.getNo() %>"<%=dept.getNo() == myDeptNo ? " selected" : "" %>><%=dept.getName() %></option>
+	   					<%
+	  					}
+	   					%>
 	   					</select>
 					</div>
 	 				<div class="col-md-6">
 						<label class="form-label">학점</label>
 						<div>
 							<div class="form-check form-check-inline">
-		  						<input class="form-check-input" type="radio" name="score"  value="3" checked="checked">
+		  						<input class="form-check-input" type="radio" name="score" value="3" checked="checked">
 		  						<label class="form-check-label" >3학점</label>
 							</div>
 							<div class="form-check form-check-inline">
@@ -78,7 +91,7 @@
 						<label class="form-label">모집정원</label>
 						<div>
 							<div class="form-check form-check-inline">
-		  						<input class="form-check-input" type="radio" name="quota"  value="10" checked="checked">
+		  						<input class="form-check-input" type="radio" name="quota" value="10" checked="checked">
 		  						<label class="form-check-label" >10명</label>
 							</div>
 							<div class="form-check form-check-inline">

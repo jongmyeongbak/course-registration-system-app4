@@ -1,4 +1,23 @@
+<%@page import="java.net.URLEncoder"%>
+<%@page import="vo.Course"%>
+<%@page import="java.util.List"%>
+<%@page import="info.Pagination"%>
+<%@page import="dao.CourseDao"%>
+<%@page import="util.StringUtils"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%
+String loginId = (String) session.getAttribute("loginId");
+if (loginId == null || !"PROFESSOR".equals(session.getAttribute("loginType"))) {
+	response.sendRedirect("../loginform.jsp?err=req&job=" + URLEncoder.encode("개설과정조회", "utf-8"));
+	return;
+}
+int pageNo = StringUtils.stringToInt(request.getParameter("page"), 1);
+
+CourseDao courseDao = CourseDao.getInstance();
+Pagination pagination = new Pagination(pageNo, courseDao.getTotalRowsByProfessorId(loginId));
+List<Course> courseList = courseDao.getCoursesByProfessorId(loginId, pagination.getFirstRow(), pagination.getLastRow()); 
+
+%>
 <!doctype html>
 <html lang="ko">
 <head>
@@ -38,42 +57,27 @@
 					</tr>
 				</thead>
 				<tbody>
+				<%
+				if (courseList.isEmpty()) {
+				%>
+					<tr class="align-middle text-center"><td colspan="7">개설한 과정이 존재하지 않습니다.<td></tr>
+				<%
+				} else {
+					for (Course course : courseList) {
+				%>
 					<tr class="align-middle">
-						<td>100</td>
-						<td>교양</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
+						<td><%=course.getNo() %></td>
+						<td><%=course.getType() %></td>
+						<td><%=course.getName() %></td>
+						<td><%=course.getDept().getName() %></td>
+						<td><%=course.getQuota() %></td>
+						<td><%=course.getReqCnt() %></td>
+						<td><a href="course-detail.jsp?cno=<%=course.getNo() %>" class="btn btn-outline-dark btn-xs">상세정보</a></td>
 					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>교양</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>전공</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>교양</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
+				<%
+					}
+				}
+				%>
 				</tbody>
 			</table>
 		</div>
@@ -82,13 +86,16 @@
 		<div class="col-12">
 			<nav>
 				<ul class="pagination justify-content-center">
-					<li class="page-item"><a class="page-link disabled" href="course-list.jsp?page=1">이전</a></li>
-					<li class="page-item"><a class="page-link active" href="course-list.jsp?page=1">1</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=2">2</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=3">3</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=4">4</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=5">5</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=2">다음</a></li>
+					<li class="page-item<%=pageNo <= 1 ? " disabled" : "" %>"><a class="page-link" href="course-list.jsp?page=<%=pageNo - 1 %>">이전</a></li>
+					<%
+					int lastPageNo = pagination.getLastPageNoOnPageList();
+					for (int no = pagination.getFirstPageNoOnPageList(); no <= lastPageNo; no++) {
+					%>
+					<li class="page-item"><a class="page-link<%=no == pageNo ? " active" : "" %>" href="course-list.jsp?page=<%=no %>"><%=no %></a></li>
+					<%
+					}
+					%>
+					<li class="page-item<%=pageNo >= pagination.getTotalPages() ? " disabled" : "" %>"><a class="page-link" href="course-list.jsp?page=<%=pageNo + 1 %>">다음</a></li>
 				</ul>
 			</nav>
 		</div>

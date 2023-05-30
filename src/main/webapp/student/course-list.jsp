@@ -1,4 +1,17 @@
+<%@page import="vo.Course"%>
+<%@page import="java.util.List"%>
+<%@page import="info.Pagination"%>
+<%@page import="dao.CourseDao"%>
+<%@page import="util.StringUtils"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%
+int pageNo = StringUtils.stringToInt(request.getParameter("page"), 1);
+
+CourseDao courseDao = CourseDao.getInstance();
+Pagination pagination = new Pagination(pageNo, courseDao.getTotalRows());
+List<Course> courseList = courseDao.getCourses(pagination.getFirstRow(), pagination.getLastRow()); 
+
+%>
 <!doctype html>
 <html lang="ko">
 <head>
@@ -38,60 +51,21 @@
 					</tr>
 				</thead>
 				<tbody>
+				<%
+				for (Course course : courseList) {
+				%>
 					<tr class="align-middle">
-						<td>100</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
+						<td><%=course.getNo() %></td>
+						<td><%=course.getName() %></td>
+						<td><%=course.getDept().getName() %></td>
+						<td><%=course.getProfessor().getName() %></td>
+						<td><%=course.getQuota() %></td>
+						<td><%=course.getReqCnt() %></td>
+						<td><a href="course-detail.jsp?cno=<%=course.getNo() %>" class="btn btn-outline-dark btn-xs">상세정보</a></td>
 					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
-					<tr class="align-middle">
-						<td>100</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td>30</td>
-						<td>6</td>
-						<td><a href="course-detail.jsp?no=1" class="btn btn-outline-dark btn-xs">상세정보</a></td>
-					</tr>
+				<%
+				}
+				%>
 				</tbody>
 			</table>
 		</div>
@@ -100,13 +74,16 @@
 		<div class="col-12">
 			<nav>
 				<ul class="pagination justify-content-center">
-					<li class="page-item"><a class="page-link disabled" href="course-list.jsp?page=1">이전</a></li>
-					<li class="page-item"><a class="page-link active" href="course-list.jsp?page=1">1</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=2">2</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=3">3</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=4">4</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=5">5</a></li>
-					<li class="page-item"><a class="page-link" href="course-list.jsp?page=2">다음</a></li>
+					<li class="page-item<%=pageNo <= 1 ? " disabled" : "" %>"><a class="page-link" href="course-list.jsp?page=<%=pageNo - 1 %>">이전</a></li>
+					<%
+					int lastPageNo = pagination.getLastPageNoOnPageList();
+					for (int no = pagination.getFirstPageNoOnPageList(); no <= lastPageNo; no++) {
+					%>
+					<li class="page-item"><a class="page-link<%=no == pageNo ? " active" : "" %>" href="course-list.jsp?page=<%=no %>"><%=no %></a></li>
+					<%
+					}
+					%>
+					<li class="page-item<%=pageNo >= pagination.getTotalPages() ? " disabled" : "" %>"><a class="page-link" href="course-list.jsp?page=<%=pageNo + 1 %>">다음</a></li>
 				</ul>
 			</nav>
 		</div>

@@ -1,4 +1,21 @@
+<%@page import="vo.Course"%>
+<%@page import="vo.Registration"%>
+<%@page import="java.util.List"%>
+<%@page import="dao.RegistrationDao"%>
+<%@page import="java.net.URLEncoder"%>
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+<%
+String loginId = (String) session.getAttribute("loginId");
+if (loginId == null) {
+	response.sendRedirect("../loginform.jsp?err=req&job=" + URLEncoder.encode("수강신청현황", "utf-8"));
+	return;
+}
+String loginType = (String) session.getAttribute("loginType");
+if (!"STUDENT".equals(loginType)) {
+	response.sendRedirect("../home.jsp?err=deny&job=" + URLEncoder.encode("수강신청현황", "utf-8"));
+	return;
+}
+%>
 <!doctype html>
 <html lang="ko">
 <head>
@@ -24,6 +41,22 @@
    	</div>
 	<div class="row mb-3">
 		<div class="col-12">
+		<%
+		String err = request.getParameter("err");
+		if ("quota".equals(err)) {
+		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>정원 초과</strong> 수강인원이 초과되었습니다.
+			</div>
+		<%
+		} else if ("deny".equals(err)) {
+		%>
+   			<div class="alert alert-danger" role="alert">
+				<strong>요청 거절</strong> 타인의 수강신청정보는 변경할 수 없습니다.
+			</div>
+		<%
+		}
+		%>
 			<p>현재 수강신청 현황을 확인하세요</p>
 			<table class="table">
 				<thead>
@@ -38,54 +71,45 @@
 					</tr>
 				</thead>
 				<tbody>
+				<%
+				List<Registration> registrations = RegistrationDao.getinstance().getRegistrationsByStudentId(loginId);
+				if (registrations.isEmpty()) {
+				%>
+					<tr class="align-middle text-center"><td colspan="7">수강신청 현황이 존재하지 않습니다.</td></tr>
+				<%
+				} else {
+					for (Registration reg : registrations) {
+						Course course = reg.getCourse();
+						String status = reg.getStatus();
+				%>
 					<tr class="align-middle">
-						<td>2000</td>
-						<td>1000</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td><span class="badge text-bg-success">신청완료</span></td>
+						<td><%=reg.getNo() %></td>
+						<td><%=course.getNo() %></td>
+						<td><%=course.getName() %></td>
+						<td><%=course.getDept().getName() %></td>
+						<td><%=course.getProfessor().getName() %></td>
 						<td>
-							<a href="course-detail.jsp?no=1000" class="btn btn-outline-dark btn-xs">상세정보</a>
-							<a href="course-cancel.jsp?regNo=2000" class="btn btn-outline-danger btn-xs">수강취소</a>
+							<span class="badge text-bg-<%="신청완료".equals(status) ? "success" : "secondary" %>"><%=status %></span>
+						</td>
+						<td>
+							<a href="course-detail.jsp?cno=<%=course.getNo() %>" class="btn btn-outline-dark btn-xs">상세정보</a>
+							<%
+							if ("신청완료".equals(status)) {
+							%>
+							<a href="course-cancel.jsp?regNo=<%=reg.getNo() %>" class="btn btn-outline-danger btn-xs">신청취소</a>
+							<%
+							} else {
+							%>
+							<a href="course-reapply.jsp?cno=<%=course.getNo() %>&regNo=<%=reg.getNo() %>" class="btn btn-primary btn-xs">재신청</a>
+							<%
+							}
+							%>
 						</td>
 					</tr>
-					<tr class="align-middle">
-						<td>1000</td>
-						<td>2000</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td><span class="badge text-bg-secondary">수강취소</span></td>
-						<td>
-							<a href="course-detail.jsp?cno=1000" class="btn btn-outline-dark btn-xs">상세정보</a>
-							<a href="course-reapply.jsp?regNo=2000" class="btn btn-primary btn-xs">재신청</a>
-						</td>
-					</tr>
-					<tr class="align-middle">
-						<td>1000</td>
-						<td>2000</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td><span class="badge text-bg-success">신청완료</span></td>
-						<td>
-							<a href="course-detail.jsp?cno=1000" class="btn btn-outline-dark btn-xs">상세정보</a>
-							<a href="course-cancel.jsp?regNo=2000" class="btn btn-outline-danger btn-xs">수강취소</a>
-						</td>
-					</tr>
-					<tr class="align-middle">
-						<td>1000</td>
-						<td>2000</td>
-						<td>웹 애플리케이션 기초</td>
-						<td>컴퓨터공학과</td>
-						<td>홍길동</td>
-						<td><span class="badge text-bg-success">신청완료</span></td>
-						<td>
-							<a href="course-detail.jsp?no=1000" class="btn btn-outline-dark btn-xs">상세정보</a>
-							<a href="course-cancel.jsp?regNo=2000" class="btn btn-outline-danger btn-xs">수강취소</a>
-						</td>
-					</tr>
+				<%
+					}
+				}
+				%>
 				</tbody>
 			</table>
 		</div>
