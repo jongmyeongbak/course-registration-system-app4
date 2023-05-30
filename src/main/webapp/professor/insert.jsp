@@ -14,7 +14,7 @@
 		return;
 	}
 	
-	ProfessorDao professorDao = new ProfessorDao();
+	ProfessorDao professorDao = ProfessorDao.getInstance();
 	if (professorDao.getProfessor(id) != null) {
 		response.sendRedirect("form.jsp?err=dup");
 		return;

@@ -5,6 +5,12 @@ import vo.Student;
 
 public class StudentDao {
 
+	private static StudentDao instance = new StudentDao();
+	private StudentDao() {}
+	public static StudentDao getInstance() {
+		return instance;
+	}
+	
 	public void insertStudent(Student student) {
 		DaoHelper.update("studentDao.insertStudent", student.getId(),
 													student.getPassword(),

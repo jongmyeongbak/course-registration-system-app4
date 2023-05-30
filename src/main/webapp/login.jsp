@@ -14,13 +14,13 @@
 	}
 	
 	if (type.equals("STUDENT")) {
-		Student student = new StudentDao().getStudent(id);
+		Student student = StudentDao.getInstance().getStudent(id);
 		if (student == null || !student.getPassword().equals(password)) {
 			response.sendRedirect("loginform.jsp?err=fail");
 			return;
 		}
 	} else if (type.equals("PROFESSOR")) {
-		Professor professor = new ProfessorDao().getProfessor(id);
+		Professor professor = ProfessorDao.getInstance().getProfessor(id);
 		if (professor == null || !professor.getPassword().equals(password)) {
 			response.sendRedirect("loginform.jsp?err=fail");
 			return;
