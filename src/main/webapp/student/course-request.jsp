@@ -25,38 +25,41 @@
 		response.sendRedirect("course-registration-list.jsp&err=quota");
 		return;
 	}
-	courseDao.increaseCourseReqCnt(cno);
-	course = courseDao.getCourseReqCnt(cno);
-	if (course.getQuota() < course.getReqCnt()) { // 신청 후에 정원 초과
-		courseDao.decreaseCourseReqCnt(cno);
-		response.sendRedirect("course-registration-list.jsp&err=quota");
-		return;
-	}
 	
-	int regNo = StringUtils.stringToInt("regNo"); // regNo가 0이 아니면 재신청시도. 0이면 재신청여부 판단필요
-	RegistrationDao registrationDao = RegistrationDao.getinstance();
-	Registration registration = registrationDao.getRegistrationByCourseNoAndStudentId(cno, loginId);
-	if (regNo != 0) {
-		if (registration == null || registration.getNo() != regNo) {
+	synchronized (RegistrationDao.class) {
+		courseDao.increaseCourseReqCnt(cno);
+		course = courseDao.getCourseReqCnt(cno);
+		if (course.getQuota() < course.getReqCnt()) { // 신청 후에 정원 초과
 			courseDao.decreaseCourseReqCnt(cno);
-			response.sendRedirect("course-registration-list.jsp&err=deny");
+			response.sendRedirect("course-registration-list.jsp&err=quota");
 			return;
 		}
-	} else if (registration != null) { // 판단 결과 재신청
-	regNo = registration.getNo(); // regNo가 0이 아니도록 실제 값을 저장함.
-	}
-	
-	if (regNo == 0) { // 첫 신청
-		registrationDao.insertRegistrationByCourseNoAndStudentId(cno, loginId);
-		if (registrationDao.countRegistrationsByCourseNoAndStudentId(cno, loginId) > 1) { // 중복신청
-			registrationDao.deleteOneRegistrationByCourseNoAndStudentId(cno, loginId);
-			courseDao.decreaseCourseReqCnt(cno);
+		
+		int regNo = StringUtils.stringToInt("regNo"); // regNo가 0이 아니면 재신청시도. 0이면 재신청여부 판단필요
+		RegistrationDao registrationDao = RegistrationDao.getinstance();
+		Registration registration = registrationDao.getRegistrationByCourseNoAndStudentId(cno, loginId);
+		if (regNo != 0) {
+			if (registration == null || registration.getNo() != regNo) {
+				courseDao.decreaseCourseReqCnt(cno);
+				response.sendRedirect("course-registration-list.jsp&err=deny");
+				return;
+			}
+		} else if (registration != null) { // 판단 결과 재신청
+		regNo = registration.getNo(); // regNo가 0이 아니도록 실제 값을 저장함.
 		}
-	} else { // 재신청
-		if ("신청완료".equals(registration.getStatus())) { // 이미 신청완료
-			courseDao.decreaseCourseReqCnt(cno);
-		} else {
-		registrationDao.updateRegistrationStatus("신청완료", regNo);
+		
+		if (regNo == 0) { // 첫 신청
+			registrationDao.insertRegistrationByCourseNoAndStudentId(cno, loginId);
+			if (registrationDao.countRegistrationsByCourseNoAndStudentId(cno, loginId) > 1) { // 중복신청
+				registrationDao.deleteOneRegistrationByCourseNoAndStudentId(cno, loginId);
+				courseDao.decreaseCourseReqCnt(cno);
+			}
+		} else { // 재신청
+			if ("신청완료".equals(registration.getStatus())) { // 이미 신청완료
+				courseDao.decreaseCourseReqCnt(cno);
+			} else {
+			registrationDao.updateRegistrationStatus("신청완료", regNo);
+			}
 		}
 	}
 	
