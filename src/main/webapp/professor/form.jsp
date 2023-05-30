@@ -64,7 +64,7 @@
    					<label class="form-label">학과</label>
    					<select class="form-select" name="deptNo">
    					<%
-   					List<Dept> depts = new DeptDao().getDepts();
+   					List<Dept> depts = DeptDao.getInstance().getDepts();
   					for (Dept dept : depts) {
    					%>
    						<option value="<%=dept.getNo() %>"><%=dept.getName() %></option>
