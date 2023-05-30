@@ -7,7 +7,7 @@ int cno = StringUtils.stringToInt(request.getParameter("cno"));
 String loginId = (String) session.getAttribute("loginId");
 String loginType = (String) session.getAttribute("loginType");
 
-Course course = new CourseDao().getCourseByNo(cno);
+Course course = CourseDao.getInstance().getCourseByNo(cno);
 if (course == null) {
 	return;
 }

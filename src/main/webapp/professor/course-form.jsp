@@ -53,10 +53,10 @@
 	   					int myDeptNo = 0;
 	   					if ("PROFESSOR".equals(loginType)) {
 	   						String loginId = (String) session.getAttribute("loginId");
-	   						myDeptNo = new ProfessorDao().getProfessor(loginId).deptNo();
+	   						myDeptNo = ProfessorDao.getInstance().getProfessor(loginId).deptNo();
 	   					}
 	   					
-	   					List<Dept> depts = new DeptDao().getDepts();
+	   					List<Dept> depts = DeptDao.getInstance().getDepts();
 	  					for (Dept dept : depts) {
 	   					%>
 	   						<option value="<%=dept.getNo() %>"<%=dept.getNo() == myDeptNo ? " selected" : "" %>><%=dept.getName() %></option>

@@ -9,6 +9,12 @@ import vo.Professor;
 
 public class CourseDao {
 
+	private static CourseDao instance = new CourseDao();
+	private CourseDao() {}
+	public static CourseDao getInstance() {
+		return instance;
+	}
+	
 	public void insertCourse(Course course) {
 		DaoHelper.update("courseDao.insertCourse", course.getName(),
 												course.getType(),

@@ -22,7 +22,7 @@
 		response.sendRedirect("course-registration-list.jsp");
 	}
 	
-	RegistrationDao registrationDao = new RegistrationDao();
+	RegistrationDao registrationDao = RegistrationDao.getinstance();
 	Registration registration = registrationDao.getRegistrationByNoAndStudentId(regNo, loginId);
 	if (registration == null) {
 		response.sendRedirect("course-registration-list.jsp&err=deny");
@@ -31,7 +31,7 @@
 	
 	if ("신청완료".equals(registration.getStatus())) {
 		registrationDao.updateRegistrationStatus("신청취소", regNo);
-		new CourseDao().decreaseCourseReqCnt(registration.courseNo());
+		CourseDao.getInstance().decreaseCourseReqCnt(registration.courseNo());
 	}
 	response.sendRedirect("course-registration-list.jsp");
 %>

@@ -13,7 +13,7 @@ if (loginId == null || !"PROFESSOR".equals(session.getAttribute("loginType"))) {
 }
 int pageNo = StringUtils.stringToInt(request.getParameter("page"), 1);
 
-CourseDao courseDao = new CourseDao();
+CourseDao courseDao = CourseDao.getInstance();
 Pagination pagination = new Pagination(pageNo, courseDao.getTotalRowsByProfessorId(loginId));
 List<Course> courseList = courseDao.getCoursesByProfessorId(loginId, pagination.getFirstRow(), pagination.getLastRow()); 
 

@@ -32,7 +32,7 @@
 	course.setDescription(description);
 	course.setDept(new Dept(deptNo));
 	course.setProfessor(new Professor(loginId));
-	new CourseDao().insertCourse(course);
+	CourseDao.getInstance().insertCourse(course);
 	
 	response.sendRedirect("course-list.jsp");
 %>

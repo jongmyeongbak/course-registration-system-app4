@@ -19,7 +19,7 @@
 	}
 	
 	int cno = StringUtils.stringToInt(request.getParameter("cno"));
-	CourseDao courseDao = new CourseDao();
+	CourseDao courseDao = CourseDao.getInstance();
 	Course course = courseDao.getCourseReqCnt(cno);
 	if (course.getQuota() <= course.getReqCnt()) { // 신청 전에 자리 없음
 		response.sendRedirect("course-registration-list.jsp&err=quota");
@@ -34,7 +34,7 @@
 	}
 	
 	int regNo = StringUtils.stringToInt("regNo"); // regNo가 0이 아니면 재신청시도. 0이면 재신청여부 판단필요
-	RegistrationDao registrationDao = new RegistrationDao();
+	RegistrationDao registrationDao = RegistrationDao.getinstance();
 	Registration registration = registrationDao.getRegistrationByCourseNoAndStudentId(cno, loginId);
 	if (regNo != 0) {
 		if (registration == null || registration.getNo() != regNo) {

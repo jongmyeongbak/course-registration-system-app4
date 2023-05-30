@@ -19,11 +19,11 @@ if (!"PROFESSOR".equals(loginType)) {
 }
 
 int cno = StringUtils.stringToInt(request.getParameter("cno"));
-Course course = new CourseDao().getCourseByNo(cno);
+Course course = CourseDao.getInstance().getCourseByNo(cno);
 if (course == null) {
 	return;
 }
-List<Student> students = new RegistrationDao().getStudentsByCourseNoAndStatus(cno, "신청완료");
+List<Student> students = RegistrationDao.getinstance().getStudentsByCourseNoAndStatus(cno, "신청완료");
 %>
 <!doctype html>
 <html lang="ko">
