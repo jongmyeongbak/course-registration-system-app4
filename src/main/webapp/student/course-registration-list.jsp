@@ -89,17 +89,7 @@ if (!"STUDENT".equals(loginType)) {
 						<td><%=course.getDept().getName() %></td>
 						<td><%=course.getProfessor().getName() %></td>
 						<td>
-						<%
-						if ("신청완료".equals(status)) {
-						%>
-						<span class="badge text-bg-success">신청완료</span>
-						<%
-						} else {
-						%>
-						<span class="badge text-bg-secondary">신청취소</span>
-						<%
-						}
-						%>
+							<span class="badge text-bg-<%="신청완료".equals(status) ? "success" : "secondary" %>"><%=status %></span>
 						</td>
 						<td>
 							<a href="course-detail.jsp?cno=<%=course.getNo() %>" class="btn btn-outline-dark btn-xs">상세정보</a>
