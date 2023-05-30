@@ -73,11 +73,11 @@ if (course == null) {
 		<%
 		if ("STUDENT".equals(loginType)) {
 		%>
-			<a href="course-request.jsp?cno=<%=cno %>" class="btn btn-success btn-sm">수강신청</a>
+			<a href="course-request.jsp?cno=<%=cno %>" class="btn btn-success<%=course.getReqCnt() < course.getQuota() ? "" : " disabled"%>">수강신청</a>
 		<%
 		}
 		%>
-			<a href="course-list.jsp" class="btn btn-secondary btn-sm">목록보기</a>
+			<a href="course-list.jsp" class="btn btn-secondary">목록보기</a>
 		</div>
 	</div>
 </div>
